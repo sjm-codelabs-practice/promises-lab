@@ -97,10 +97,16 @@ const app = (() => {
   }
 
   function allFlags(promiseList) {
-    // use promise.all
+    return Promise.all(promiseList)
+      .then(values => values)
+      .catch(reason => false);
   }
 
-  // call the allFlags function
+  const promises = [getImageName("Spain"), getImageName("Chile"), getImageName("Peru")];
+
+  allFlags(promises).then(result => {
+    console.log(result);
+  });
 
   // use Promise.race
 
