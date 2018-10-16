@@ -17,11 +17,36 @@ limitations under the License.
 
 const app = (() => {
   function getImageName(country) {
-    // create and return a promise
+    const countryLower = country.toLowerCase();
+    const promiseOfImageName = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (
+          countryLower === "spain" ||
+          countryLower === "chile" ||
+          countryLower === "peru"
+        ) {
+          resolve(`${countryLower}.png`);
+        } else {
+          reject(Error("Didn't receive a valid country name!"));
+        }
+      }, 1000);
+    });
+    console.log(promiseOfImageName);
+    return promiseOfImageName;
   }
 
   function isSpain(country) {
-    // Optional - create and return a promise that resolves if input is "Spain"
+    const promiseOfImageName = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (country === "Spain") {
+          resolve(`${country}.png`);
+        } else {
+          reject(Error("Didn't receive a valid country name!"));
+        }
+      }, 1000);
+    });
+    console.log(promiseOfImageName);
+    return promiseOfImageName;
   }
 
   function flagChain(country) {
@@ -39,11 +64,11 @@ const app = (() => {
   /* Helper functions */
 
   function logSuccess(result) {
-    console.log(`Success!:\n${  result}`);
+    console.log(`Success!:\n${result}`);
   }
 
   function logError(err) {
-    console.log(`Oh no!:\n${  err}`);
+    console.log(`Oh no!:\n${err}`);
   }
 
   function returnFalse() {
@@ -51,7 +76,7 @@ const app = (() => {
   }
 
   function fetchFlag(imageName) {
-    return fetch(`flags/${  imageName}`); // fetch returns a promise
+    return fetch(`flags/${imageName}`); // fetch returns a promise
   }
 
   function processFlag(flagResponse) {
