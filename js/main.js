@@ -108,7 +108,18 @@ const app = (() => {
     console.log(result);
   });
 
-  // use Promise.race
+  const promise1 = new Promise((resolve, reject) => {
+    setTimeout(resolve, 500, "one");
+  });
+
+  const promise2 = new Promise((resolve, reject) => {
+    setTimeout(resolve, 100, "two");
+  });
+
+  // since this is a race, it returns the result of the first resolved promise only
+  Promise.race([promise1, promise2])
+    .then(logSuccess)
+    .catch(logError);
 
   // Don't worry if you don't understand this, it's not part of Promises.
   // We are using the JavaScript Module Pattern to enable unit testing of
