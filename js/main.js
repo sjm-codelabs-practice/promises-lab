@@ -16,34 +16,14 @@ limitations under the License.
 /* jshint esversion: 6 */
 
 const app = (() => {
-  function getImageName(country) {
-    // create and return a promise
-  }
-
-  function isSpain(country) {
-    // Optional - create and return a promise that resolves if input is "Spain"
-  }
-
-  function flagChain(country) {
-    // use the promise
-  }
-
-  function allFlags(promiseList) {
-    // use promise.all
-  }
-
-  // call the allFlags function
-
-  // use Promise.race
-
   /* Helper functions */
 
   function logSuccess(result) {
-    console.log(`Success!:\n${  result}`);
+    console.log(`Success!:\n${result}`);
   }
 
   function logError(err) {
-    console.log(`Oh no!:\n${  err}`);
+    console.log(`Oh no!:\n${err}`);
   }
 
   function returnFalse() {
@@ -51,7 +31,7 @@ const app = (() => {
   }
 
   function fetchFlag(imageName) {
-    return fetch(`flags/${  imageName}`); // fetch returns a promise
+    return fetch(`flags/${imageName}`); // fetch returns a promise
   }
 
   function processFlag(flagResponse) {
@@ -73,6 +53,73 @@ const app = (() => {
   function fallbackName() {
     return "chile.png";
   }
+
+  function getImageName(country) {
+    const countryLower = country.toLowerCase();
+    const promiseOfImageName = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (
+          countryLower === "spain" ||
+          countryLower === "chile" ||
+          countryLower === "peru"
+        ) {
+          resolve(`${countryLower}.png`);
+        } else {
+          reject(Error("Didn't receive a valid country name!"));
+        }
+      }, 1000);
+    });
+    console.log(promiseOfImageName);
+    return promiseOfImageName;
+  }
+
+  function isSpain(country) {
+    const promiseOfImageName = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (country === "Spain") {
+          resolve(`${country}.png`);
+        } else {
+          reject(Error("Didn't receive a valid country name!"));
+        }
+      }, 1000);
+    });
+    console.log(promiseOfImageName);
+    return promiseOfImageName;
+  }
+
+  function flagChain(country) {
+    return getImageName(country)
+      .catch(fallbackName)
+      .then(fetchFlag)
+      .then(processFlag)
+      .then(appendFlag)
+      .catch(logError);
+  }
+
+  function allFlags(promiseList) {
+    return Promise.all(promiseList)
+      .then(values => values)
+      .catch(reason => false);
+  }
+
+  const promises = [getImageName("Spain"), getImageName("Chile"), getImageName("Peru")];
+
+  allFlags(promises).then(result => {
+    console.log(result);
+  });
+
+  const promise1 = new Promise((resolve, reject) => {
+    setTimeout(resolve, 500, "one");
+  });
+
+  const promise2 = new Promise((resolve, reject) => {
+    setTimeout(resolve, 100, "two");
+  });
+
+  // since this is a race, it returns the result of the first resolved promise only
+  Promise.race([promise1, promise2])
+    .then(logSuccess)
+    .catch(logError);
 
   // Don't worry if you don't understand this, it's not part of Promises.
   // We are using the JavaScript Module Pattern to enable unit testing of
